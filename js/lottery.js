@@ -77,6 +77,10 @@ $(function(){
         }
     }
 
+    /**
+     * 统一设置姓名方法
+     * @param name
+     */
     function setName(name){
         $("#first").html(name.charAt(0));
         $("#second").html(name.charAt(1));
