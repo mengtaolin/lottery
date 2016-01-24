@@ -15,7 +15,13 @@ $(function(){
 
     function init(){
         $("#btn").click(function(e){
-            lottery();
+            if(isPlaying == false)
+            {
+                lottery();
+            }
+            else{
+                stopAndShowResult();
+            }
         });
         initData();
     }
@@ -27,8 +33,12 @@ $(function(){
     }
 
     function lottery(){
-        if(isPlaying == true)return;
-        if(nameList == null || nameList.length <= 0)return;
+        if(nameList == null)return;
+        if(nameList.length <= 0){
+            confirme(restart,null,"全部人员都已获得奖品，是否重新开始？");
+            return;
+        }
+        $("#btn").css("background-image","url("+'images/btn2.png'+")");
         var random = Math.floor(Math.random() * nameList.length);
         var tmp = nameList.splice(random,1);
         resName = passList[passList.length] = tmp[0];
@@ -69,14 +79,19 @@ $(function(){
         setName(name);
         index ++;
         nameIndex ++;
-        if(index >= 200)
-        {
-            clearInterval(intervalId);
-            setName(resName);
-            isPlaying = false;
-        }
     }
 
+    function stopAndShowResult(){
+        clearInterval(intervalId);
+        setName(resName);
+        isPlaying = false;
+        $("#btn").css("background-image","url("+'images/btn1.png'+")");
+    }
+
+    function restart(){
+        initData();
+        lottery();
+    }
     /**
      * 统一设置姓名方法
      * @param name
@@ -87,4 +102,20 @@ $(function(){
         $("#third").html(name.charAt(2));
     }
 
+    function confirme(okFunc,cancleFunc,msg){
+        alertify.confirm(msg, function (e) {
+            if (e) {
+                if(okFunc != null)
+                {
+                    okFunc.call(null);
+                }
+            } else {
+                if(cancleFunc != null)
+                {
+                    cancleFunc.call(null);
+                }
+            }
+        });
+        return false;
+    }
 })
